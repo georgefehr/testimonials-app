@@ -44680,14 +44680,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         deleteTestimonial: function deleteTestimonial(id) {
+            var _this2 = this;
 
-            Bus.$emit('alert', { text: 'Testimonial deleted.', type: 'success' });
-            //
-            //                axios.delete('/api/testimonials/' + id)
-            //                    .then(response => {
-            //                        this.getTestimonials();
-            //                        app.$emit('alert', {text: 'Testimonial deleted.', type: 'success'});
-            //                    });
+            axios.delete('/api/testimonials/' + id).then(function (response) {
+                _this2.getTestimonials();
+                Bus.$emit('alert', { text: 'Testimonial deleted.', type: 'success' });
+            });
         }
     },
     mounted: function mounted() {
@@ -44939,6 +44937,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -44950,22 +44949,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
-        getTestimonials: function getTestimonials() {
-            var _this = this;
-
-            axios.get('/api/testimonials').then(function (response) {
-                _this.testimonials = response.data;
-            });
+        close: function close() {
+            this.alertShow = false;
         }
     },
     mounted: function mounted() {
-        var _this2 = this;
+        var _this = this;
 
         Bus.$on('alert', function (data) {
-            console.log(data);
-            _this2.type = 'alert-' + data.type;
-            _this2.text = data.text;
-            _this2.alertShow = true;
+            _this.type = 'alert-' + data.type;
+            _this.text = data.text;
+            _this.alertShow = true;
         });
     }
 });
@@ -44978,7 +44972,20 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return (_vm.alertShow) ? _c('div', {
     staticClass: "alert",
     class: _vm.type
-  }, [_vm._v("\n    " + _vm._s(_vm.text) + "\n")]) : _vm._e()
+  }, [_c('button', {
+    staticClass: "close",
+    attrs: {
+      "type": "button",
+      "aria-label": "Close"
+    },
+    on: {
+      "click": _vm.close
+    }
+  }, [_c('span', {
+    attrs: {
+      "aria-hidden": "true"
+    }
+  }, [_vm._v("×")])]), _vm._v("\n    " + _vm._s(_vm.text) + "\n")]) : _vm._e()
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

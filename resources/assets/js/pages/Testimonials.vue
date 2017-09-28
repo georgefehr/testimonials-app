@@ -40,14 +40,11 @@
                     });
             },
             deleteTestimonial(id) {
-
-                Bus.$emit('alert', {text: 'Testimonial deleted.', type: 'success'});
-//
-//                axios.delete('/api/testimonials/' + id)
-//                    .then(response => {
-//                        this.getTestimonials();
-//                        app.$emit('alert', {text: 'Testimonial deleted.', type: 'success'});
-//                    });
+                axios.delete('/api/testimonials/' + id)
+                    .then(response => {
+                        this.getTestimonials();
+                        Bus.$emit('alert', {text: 'Testimonial deleted.', type: 'success'});
+                    });
             }
         }, 
         mounted() {

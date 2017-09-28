@@ -1,6 +1,7 @@
 <template>
 
     <div class="alert" :class="type" v-if="alertShow">
+        <button type="button" class="close" @click="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         {{ text }}
     </div>
 
@@ -16,16 +17,12 @@
             }
         },
         methods: {
-            getTestimonials() {
-                axios.get('/api/testimonials')
-                    .then(response => {
-                        this.testimonials = response.data;
-                    });
+            close() {
+                this.alertShow = false;
             }
         },
         mounted() {
             Bus.$on('alert', data => {
-                console.log(data);
                 this.type = 'alert-' + data.type;
                 this.text = data.text;
                 this.alertShow = true;
