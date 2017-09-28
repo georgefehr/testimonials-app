@@ -1,12 +1,12 @@
 <template>
     <div class="add-testimonials">
         <form @submit.prevent="save">
-            <div class="form-group">
-                <label for="testimonial-name">Name</label>
+            <div class="form-group" :class="{'has-error': errors.name}">
+                <label class="control-label" for="testimonial-name">Name</label>
                 <input type="text" class="form-control" id="testimonial-name" v-model="testimonial.name">
             </div>
-            <div class="form-group">
-                <label for="testimonial-comment">Comment</label>
+            <div class="form-group" :class="{'has-error': errors.comment}">
+                <label class="control-label" for="testimonial-comment">Comment</label>
                 <textarea class="form-control" id="testimonial-comment" v-model="testimonial.comment"></textarea>
             </div>
             <div class="form-group">
@@ -22,7 +22,8 @@
     export default {
         data() {
             return {
-                testimonial: {}
+                testimonial: {},
+                errors: {}
             }
         },
         methods: {
@@ -31,12 +32,23 @@
                     axios.put('/api/testimonials/' + this.testimonial.id, this.testimonial)
                         .then(response => {
                             this.$router.push('/');
-                        });
+                        })
+                        .catch(this.error);
                 } else {
                     axios.post('/api/testimonials', this.testimonial)
                         .then(response => {
                             this.$router.push('/');
-                        });
+                        })
+                        .catch(this.error);
+                }
+            },
+            error(error) {
+                if(error.response.status === 422){
+                    if(error.response.data.errors){
+                        this.$data.errors = error.response.data.errors;
+                    } else {
+                        Bus.$emit('alert', {text: error.response.data.message, type: 'danger'});
+                    }
                 }
             }
         },

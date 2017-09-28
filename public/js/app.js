@@ -44764,7 +44764,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            testimonial: {}
+            testimonial: {},
+            errors: {}
         };
     },
 
@@ -44775,11 +44776,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (this.testimonial.id) {
                 axios.put('/api/testimonials/' + this.testimonial.id, this.testimonial).then(function (response) {
                     _this.$router.push('/');
-                });
+                }).catch(this.error);
             } else {
                 axios.post('/api/testimonials', this.testimonial).then(function (response) {
                     _this.$router.push('/');
-                });
+                }).catch(this.error);
+            }
+        },
+        error: function error(_error) {
+            if (_error.response.status === 422) {
+                if (_error.response.data.errors) {
+                    this.$data.errors = _error.response.data.errors;
+                } else {
+                    Bus.$emit('alert', { text: _error.response.data.message, type: 'danger' });
+                }
             }
         }
     },
@@ -44809,8 +44819,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_c('div', {
-    staticClass: "form-group"
+    staticClass: "form-group",
+    class: {
+      'has-error': _vm.errors.name
+    }
   }, [_c('label', {
+    staticClass: "control-label",
     attrs: {
       "for": "testimonial-name"
     }
@@ -44836,8 +44850,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   })]), _vm._v(" "), _c('div', {
-    staticClass: "form-group"
+    staticClass: "form-group",
+    class: {
+      'has-error': _vm.errors.comment
+    }
   }, [_c('label', {
+    staticClass: "control-label",
     attrs: {
       "for": "testimonial-comment"
     }
